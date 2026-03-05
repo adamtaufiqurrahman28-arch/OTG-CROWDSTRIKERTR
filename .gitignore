@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+*.pyo
+*.pkl
+*.log
+*.sqlite3
+
+# Virtualenv
+.venv/
+venv/
+ENV/
+env/
+
+# Secrets
+.env
+.env.*
+*.pem
+*.key
+
+# Outputs / artifacts
+exports/
+*.csv
+*.json
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
