@@ -1,3 +1,30 @@
+## Struktur project
+
+```text
+cs_bulk_upgrade_app/
+├─ main.py
+├─ requirements.txt
+├─ .env.example
+├─ README.md
+├─ app/
+│  ├─ config/
+│  │  └─ settings.py
+│  ├─ clients/
+│  │  └─ falcon.py
+│  ├─ models/
+│  │  └─ host.py
+│  ├─ services/
+│  │  ├─ host_group_service.py
+│  │  ├─ inventory_service.py
+│  │  ├─ putfile_service.py
+│  │  ├─ rtr_service.py
+│  │  ├─ monitor_service.py
+│  │  └─ orchestrator.py
+│  └─ utils/
+│     └─ common.py
+└─ exports/
+```
+
 # CrowdStrike Bulk Upgrade RTR App
 
 Aplikasi Python modular untuk melakukan bulk upgrade CrowdStrike Falcon Sensor melalui Real Time Response (RTR) menggunakan file installer yang **sudah tersedia** di tab **RTR Put Files**.
@@ -27,32 +54,7 @@ Aplikasi ini **tidak** meng-upload installer baru dari lokal dan **tidak** mengu
 8. Simpan response RTR ke file JSON.
 9. Jika mode monitor aktif, lakukan polling inventory sampai host mencapai target build atau jumlah polling habis.
 
-## Struktur project
 
-```text
-cs_bulk_upgrade_app/
-├─ main.py
-├─ requirements.txt
-├─ .env.example
-├─ README.md
-├─ app/
-│  ├─ config/
-│  │  └─ settings.py
-│  ├─ clients/
-│  │  └─ falcon.py
-│  ├─ models/
-│  │  └─ host.py
-│  ├─ services/
-│  │  ├─ host_group_service.py
-│  │  ├─ inventory_service.py
-│  │  ├─ putfile_service.py
-│  │  ├─ rtr_service.py
-│  │  ├─ monitor_service.py
-│  │  └─ orchestrator.py
-│  └─ utils/
-│     └─ common.py
-└─ exports/
-```
 
 ## Penjelasan file dan folder
 
