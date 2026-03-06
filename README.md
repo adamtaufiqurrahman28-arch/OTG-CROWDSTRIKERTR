@@ -185,6 +185,17 @@ python main.py \
   --max-polls 20
 ```
 
+python main.py `
+  --host-group-id a3102b1b645b4b658f787adea003bd2c `
+  --target-build 7.34.20610 `
+  --put-name "FalconSensor_Latest.exe" `
+  --install-args "/install /quiet /norestart /log ""C:\Windows\Temp\FalconSensorLogs""" `
+  --top-n-online 10 `
+  --online-minutes 10 `
+  --monitor `
+  --poll-seconds 120 `
+  --max-polls 30
+
 ### Contoh dengan `put_file_id`
 
 ```bash
