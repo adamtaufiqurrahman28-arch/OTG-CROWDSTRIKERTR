@@ -9,7 +9,6 @@ def main() -> None:
     config = AppConfig.from_args(args)
     clients = FalconClients.from_env(config.client_id, config.client_secret)
     run_bulk_upgrade(config, clients)
-
-
+    
 if __name__ == "__main__":
     main()

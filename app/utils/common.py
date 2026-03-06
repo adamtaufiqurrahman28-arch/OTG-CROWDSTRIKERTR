@@ -3,6 +3,7 @@ import json
 import re
 from pathlib import Path
 from typing import Any, Dict, Iterable, Iterator, List
+from datetime import datetime, timezone
 
 
 def ensure_success(resp: Dict[str, Any], context: str) -> None:
@@ -61,3 +62,20 @@ def write_aids_csv(path: Path, aids: Iterable[str]) -> None:
 
 def write_json(path: Path, payload: Dict[str, Any]) -> None:
     path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+def quote_if_needed(text: str) -> str:
+    if not text:
+        return ""
+    if " " in text or "'" in text or '"' in text:
+        return f'"{text}"'
+    return text
+
+def is_online(last_seen_iso: str, minutes: int = 10) -> bool:
+    if not last_seen_iso:
+        return False
+    try:
+        dt = datetime.fromisoformat(last_seen_iso.replace("Z", "+00:00"))
+        age = datetime.now(timezone.utc) - dt
+        return age.total_seconds() <= minutes * 60
+    except Exception:
+        return False

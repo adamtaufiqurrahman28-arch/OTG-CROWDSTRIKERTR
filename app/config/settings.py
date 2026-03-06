@@ -68,4 +68,8 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--max-polls", type=int, default=10, help="Jumlah polling maksimum")
     parser.add_argument("--dry-run", action="store_true", help="Hanya inventory + candidate, tanpa RTR execute")
     parser.add_argument("--export-dir", default="./exports", help="Folder output CSV/JSON")
+    parser.add_argument("--interactive", action="store_true", help="Menu pilih host untuk install")
+    parser.add_argument("--online-minutes", type=int, default=10, help="Threshold last_seen untuk dianggap online")
+    parser.add_argument("--top-n-online", type=int, default=0, help="Ambil TOP N host online (0=disable)")
+    parser.add_argument("--trace-rtr", action="store_true", help="Export trace status RTR (CSV)")
     return parser

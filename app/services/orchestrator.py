@@ -7,14 +7,16 @@ from app.services.putfile_service import PutFileService
 from app.services.rtr_service import RTRService
 from app.services.monitor_service import MonitorService
 from app.utils.common import write_aids_csv, write_csv, write_json
+from app.services.selection_service import SelectionService
 
 
 def run_bulk_upgrade(config: AppConfig, clients: FalconClients) -> None:
     host_group_service = HostGroupService(clients.host_group)
     inventory_service = InventoryService(clients.hosts)
     put_file_service = PutFileService(clients.rtr_admin)
-    rtr_service = RTRService(clients.rtr, clients.rtr_admin)
+    rtr_service = RTRService(clients.rtr, clients.rtr_admin, config.export_dir)
     monitor_service = MonitorService(inventory_service)
+    selection_service = SelectionService()
 
     print(f"[1] Ambil AID dari host-group: {config.host_group_id}")
     aids = host_group_service.list_group_aids(config.host_group_id)
@@ -64,6 +66,22 @@ def run_bulk_upgrade(config: AppConfig, clients: FalconClients) -> None:
         print("Tidak ada kandidat upgrade Windows.")
         return
 
+    # ====== SELECTION (yang kamu minta) ======
+    # Letakkan DI SINI: setelah kandidat dihitung, sebelum resolve put-file & RTR execute
+    # SelectionService akan menentukan host mana yang diprioritaskan/diinstall
+    selected_rows = selection_service.select(
+        candidates=candidate_rows,
+        online_minutes=getattr(config, "online_minutes", 10),
+        top_n_online=getattr(config, "top_n_online", 0),
+        interactive=getattr(config, "interactive", False),
+    )
+    if not selected_rows:
+        print("Tidak ada host dipilih. Stop.")
+        return
+
+    candidate_rows = selected_rows
+    # ========================================
+
     print("[4] Resolve existing put-file dari RTR")
     put_meta = put_file_service.resolve_existing_put_file(
         put_name=config.put_name,
@@ -76,17 +94,18 @@ def run_bulk_upgrade(config: AppConfig, clients: FalconClients) -> None:
     candidate_aids = [row["aid"] for row in candidate_rows]
 
     print("[5] Batch init RTR sessions")
-    batch_id = rtr_service.init_batch(candidate_aids, config.queue_offline)
+    batch_id = rtr_service.batch_init(candidate_aids, config.queue_offline)
     print(f"    batch_id: {batch_id}")
 
     print("[6] Execute batch admin command: put-and-run")
-    response = rtr_service.run_put_and_run(
+    
+    response = rtr_service.put_and_run(
         batch_id=batch_id,
-        candidate_aids=candidate_aids,
+        host_ids=candidate_aids,
         put_name=put_name,
         install_args=config.install_args,
         queue_offline=config.queue_offline,
-    )
+)
 
     response_json = config.export_dir / f"{config.host_group_id}_rtr_put_and_run_response.json"
     write_json(response_json, response)
