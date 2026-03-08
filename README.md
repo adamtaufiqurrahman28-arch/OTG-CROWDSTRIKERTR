@@ -2,9 +2,10 @@
 
 ```text
 cs_bulk_upgrade_app/
+├─ gui.py
 ├─ main.py
 ├─ requirements.txt
-├─ .env.example
+├─ .env
 ├─ README.md
 ├─ app/
 │  ├─ config/
