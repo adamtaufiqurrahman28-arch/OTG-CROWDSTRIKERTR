@@ -1,3 +1,8 @@
+## Cara Menjalankan 
+
+streamlit run gui.py
+
+
 ## Struktur project
 
 ```text
